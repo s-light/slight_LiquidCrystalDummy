@@ -16,7 +16,7 @@
 		~ slight_LiquidCristalDummy
 			written by stefan krueger (s-light),
 				github@s-light.eu, http://s-light.eu, https://github.com/s-light/
-			cc by sa, Apache License Version 2.0, MIT
+			MIT
 		~ slight_ButtonInput
 			written by stefan krueger (s-light),
 				github@s-light.eu, http://s-light.eu, https://github.com/s-light/
@@ -28,6 +28,7 @@
 
 	changelog / history
 		05.10.2015 10:10 created
+		06.10.2015 20:37 should work :-)
 
 
 	TO DO:
@@ -69,8 +70,8 @@
 
 #include <LiquidCrystal.h>
 
-// #include <slight_LiquidCrystalDummy.h>
-#include "slight_LiquidCrystalDummy.h"
+#include <slight_LiquidCrystalDummy.h>
+// #include "slight_LiquidCrystalDummy.h"
 
 #include <slight_ButtonInput.h>
 
@@ -169,59 +170,6 @@ LiquidCrystal lcd_raw(7, 8, 9, 10, 11, 12);
 
 LiquidCrystalDummy lcd(lcd_raw);
 
-// based on
-// DualWrite from pYro_65 read more at: http://forum.arduino.cc/index.php?topic=200975.0
-// class LCDTester : public LiquidCrystal {
-// 	public:
-// 		DualWriteLC(
-// 			LiquidCrystal &p_Out1,
-// 			LiquidCrystalDummy &p_Out2
-// 		) :
-// 			OutputA( p_Out1 ),
-// 			OutputB( p_Out2 )
-// 		{}
-//
-// 		void begin(uint8_t cols, uint8_t rows) {
-// 			OutputA.begin(cols, rows);
-// 			OutputB.begin(cols, rows);
-// 		}
-//
-// 		void setCursor(uint8_t col, uint8_t row) {
-// 			OutputA.begin(col, row);
-// 			OutputB.begin(col, row);
-// 		}
-//
-// 		size_t write( uint8_t u_Data ) {
-// 			OutputA.write( u_Data );
-// 			OutputB.write( u_Data );
-// 			return 0x01;
-// 		}
-//
-// 	protected:
-// 		LiquidCrystal &OutputA;
-// 		LiquidCrystalDummy &OutputB;
-// }
-//
-//
-// DualWriteLC multiLCD( lcd, lcdDummy);
-
-
-// DualWrite from pYro_65 read more at: http://forum.arduino.cc/index.php?topic=200975.0
-class DualWriter : public Print{
-	public:
-		DualWriter( Print &p_Out1, Print &p_Out2 ) : OutputA( p_Out1 ), OutputB( p_Out2 ){}
-
-		size_t write( uint8_t u_Data ) {
-			OutputA.write( u_Data );
-			OutputB.write( u_Data );
-			return 0x01;
-		}
-	protected:
-		Print &OutputA;
-		Print &OutputB;
-};
-
-// DualWriter dwOUT( Serial, Serial1);
 
 /**************************************************/
 /**  slight ButtonInput                          **/
@@ -229,7 +177,7 @@ class DualWriter : public Print{
 
 slight_ButtonInput myButton(
 	42, // uint8_t cbID_New
-	6, // uint8_t cbPin_New,
+	A2, // uint8_t cbPin_New,
 	myButton_getInput, // tCbfuncGetInput cbfuncGetInput_New,
 	myButton_onEvent, // tcbfOnEvent cbfCallbackOnEvent_New,
 	  30, // const uint16_t cwDuration_Debounce_New = 30,
@@ -686,6 +634,10 @@ void displayTime() {
 
 	lcd.setCursor(xPos, yPos);
 	xPos += lcd.print(millis()/1000);
+
+	// lcd.setCursor(16-3, yPos);
+	// xPos += lcd.print(";-)");
+	// xPos += lcd.print("   ");
 }
 
 
@@ -722,19 +674,23 @@ void myButton_onEvent(slight_ButtonInput *pInstance, uint8_t bEvent) {
 			Serial.println();
 		} break;*/
 		// click
-		/*case slight_ButtonInput::event_Down : {
-			Serial.println(F("the button is pressed down! do something.."));
-		} break;*/
+		case slight_ButtonInput::event_Down : {
+			Serial.println(F("down"));
+			lcd.setCursor(16-3, 1);
+			lcd.print(";-)");
+		} break;
 		/*case slight_ButtonInput::event_HoldingDown : {
 			Serial.print(F("duration active: "));
 			Serial.println((*pInstance).getDurationActive());
 		} break;*/
-		/*case slight_ButtonInput::event_Up : {
+		case slight_ButtonInput::event_Up : {
 			Serial.println(F("up"));
-		} break;*/
-		case slight_ButtonInput::event_Click : {
-			Serial.println(F("click"));
+			lcd.setCursor(16-3, 1);
+			lcd.print("   ");
 		} break;
+		// case slight_ButtonInput::event_Click : {
+		// 	Serial.println(F("click"));
+		// } break;
 		// case slight_ButtonInput::event_ClickLong : {
 		// 	Serial.println(F("click long"));
 		// } break;
