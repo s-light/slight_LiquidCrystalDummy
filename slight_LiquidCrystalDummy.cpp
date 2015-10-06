@@ -49,8 +49,9 @@ void LiquidCrystalDummy::setCursor(uint8_t col, uint8_t row) {
 size_t LiquidCrystalDummy::write( uint8_t u_Data ) {
     if (ready) {
         lcd.write(u_Data);
-
         displaydata[pos_col + (pos_row * size_cols)] = u_Data;
+        // move cursor to next col
+        pos_col = pos_col +1;
 	    return 0x01;
     } else {
         return 0x00;
