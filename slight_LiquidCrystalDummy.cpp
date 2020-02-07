@@ -61,6 +61,11 @@ size_t LiquidCrystalDummy::write( uint8_t u_Data ) {
     }
 }
 
+void LiquidCrystalDummy::createChar(uint8_t location, uint8_t charmap[]) {
+    if (ready) {
+        lcd.createChar(location, charmap);
+    }
+}
 
 void LiquidCrystalDummy::printContent(Print &pOut) {
     if (ready) {

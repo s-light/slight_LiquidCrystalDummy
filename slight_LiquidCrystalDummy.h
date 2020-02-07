@@ -25,6 +25,7 @@ class LiquidCrystalDummy : public Print {
 		void begin(uint8_t cols, uint8_t rows);
 		void setCursor(uint8_t col, uint8_t row);
 		size_t write( uint8_t u_Data );
+		void createChar(uint8_t, uint8_t[]);
 
 		void printContent(Print &pOut);
 
